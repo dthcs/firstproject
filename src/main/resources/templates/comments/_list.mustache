@@ -14,6 +14,9 @@
                         data-bs-article-id="{{articleId}}">
                     Edit
                 </button>
+
+<!--                delete button-->
+                <button type="button" class="btn btn-sm btn-outline-danger comment-delte-btn" data-comment-id="{{id}}">Delete</button>
             </div>
             <div class="card-body">
                 {{body}}
@@ -104,5 +107,35 @@
            });
         }
 
+    }
+</script>
+
+<!--delete comment-->
+<script>
+    {
+        const commentDeleteBtns = document.querySelectorAll(".comment-delte-btn");
+        // commentDeleteBtn.addEventListener("click", function(){
+        commentDeleteBtns.forEach(btn => {
+            btn.addEventListener("click", (event) => {
+                const commentDeleteBtn = event.target;
+                const commentId = commentDeleteBtn.getAttribute("data-comment-id");
+                console.log(`delete button click: ${commentId} comment`);
+
+                const url = `/api/comments/${commentId}`;
+                fetch(url, {
+                    method: "DELETE"
+                }).then(response => {
+                    if(!response.ok) {
+                        alert("delete failed");
+                        return;
+                    }
+                    const target = document.querySelector(`#comments-${commentId}`);
+                    target.remove();
+                    const msg = `${commentId} deleted`;
+                    // alert(msg);
+                    window.location.reload();
+                })
+            })
+        });
     }
 </script>
